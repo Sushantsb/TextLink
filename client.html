@@ -1,0 +1,80 @@
+<html>
+<script src="enckey.js" type="text/javascript"></script>
+<script type="text/javascript">
+var name,password,msg,m,i,j,s,init=0;
+var nmsg="",dmsg="",smsg="",pmsg="";
+
+function set()
+{
+ name=document.getElementById("n").value;
+ password=document.getElementById("p").value;
+ if(name=="hoffmen"&&password=="sugar_crystal")
+ {init=1;
+ document.getElementById("n").style.display="none";
+ document.getElementById("p").style.display="none";
+ document.getElementById("start").style.display="none";
+}
+}
+
+function send()
+{
+if(init)
+ {
+ j=-1;
+ msg=document.getElementById("ms").value;
+ var time=new Date();
+ document.getElementById("disp").innerHTML=document.getElementById("disp").innerHTML+name+"["+time.getHours()+":"+time.getMinutes()+"] "+msg+"\n";
+ document.getElementById("disp").scrollTop = document.getElementById("disp").scrollHeight;
+ for(i=0;i<msg.length;++i)
+  {
+   if(++j==seed.length) 
+   {j=0;}
+   nmsg+=String.fromCharCode(msg.charCodeAt(i)+64+seed[j]);
+  }
+ k="https://irurin.000webhostapp.com/?id="+name+"&code="+password+"&req=throw"+"&cry="+nmsg;
+ m=new XMLHttpRequest();
+ m.open('get',k,true);
+ m.setRequestHeader('Content-Type','application/x-www-form-urlencoded;charset=UTF-8');
+ m.send();nmsg="";
+ }
+}
+
+setInterval(function () 
+{
+if(init)
+{
+ var x=new XMLHttpRequest();
+ x.onreadystatechange=function(){
+  if(this.readyState==4&&this.status==200)
+  {
+   dmsg=this.responseText;
+  }
+ };
+ x.open("GET","http://irurin.000webhostapp.com/index.php?&id=hoffmen&code=sugar_crystal&req=fetch",true);
+ x.send();
+ j=-1;
+ for(i=0;i<dmsg.length;++i)
+   {
+    if(++j==seed.length) 
+    {j=0;}
+    smsg+=String.fromCharCode(dmsg.charCodeAt(i)-64-seed[j]);
+   }
+ console.log(smsg+"\n");
+ if(pmsg!=smsg){
+ pmsg=smsg;
+ var time=new Date();
+ document.getElementById("disp").innerHTML=document.getElementById("disp").innerHTML+"heisenberg"+"["+time.getHours()+":"+time.getMinutes()+"] "+smsg+"\n";
+ document.getElementById("disp").scrollTop = document.getElementById("disp").scrollHeight;
+ }
+ smsg="";
+}
+},2000);
+
+</script>
+<textarea id="disp" style="height:400px;width:700px;"></textarea><br>
+<input type="text" style="height:40px;width:600px;" id="ms">
+<button onclick="send()" style="height:40px;width:97px;">send</button><br>
+<input type="text" id="n">
+<input type="text" id="p">
+<button onclick="set()" id="start" >set</button>
+</html> 
